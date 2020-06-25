@@ -1,0 +1,2 @@
+The average of the grades is 85.9
+11 of the grades were higher than the average.
