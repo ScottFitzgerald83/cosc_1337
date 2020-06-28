@@ -1,0 +1,1 @@
+/usr/bin/g++  -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/dev_project_3.dir/week_4/dev_project_3.cpp.o  -o dev_project_3 

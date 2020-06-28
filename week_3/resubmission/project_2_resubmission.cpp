@@ -16,7 +16,9 @@ double getBeginningBalance();
 void getTransactions(double& runningAccountBalance, double serviceCharge, double& accumulatedServiceCharges);
 void confirmTransaction(char transactionType, double transactionAmount);
 double processTransaction(char transactionType, double transactionAmount, double serviceCharge, double& accumulatedServiceCharges);
-void displayTransactionConfirmation(double& runningAccountBalance, double& accumulatedServiceCharges, char transactionType);
+double processCheck(double transactionAmount, double serviceCharge, double &accumulatedServiceCharges);
+double processDeposit(double transactionAmount);
+void displayTransactionConfirmation(double& runningAccountBalance, double serviceCharge, double& accumulatedServiceCharges, char transactionType);
 void processEndOfMonth(double runningAccountBalance, double accumulatedServiceCharges);
 
 int main()
@@ -26,7 +28,7 @@ int main()
 	double runningAccountBalance = 0;   					// used to store transaction totals
 	double totalExpenses = 0;								// accumulator for expenses
 	double totalIncomes = 0;								// accumulator for incomes
-	double serviceCharge = .25;       						// don't charge until EOM
+	double serviceCharge = .35;       						// don't charge until EOM
 	double accumulatedServiceCharges = 0;					// don't charge until EOM
 
 	// Get initial balance from user
@@ -68,8 +70,8 @@ void getTransactions(double &runningAccountBalance, double serviceCharge, double
 		cout << "C - Process a check" << endl;
 		cout << "D - Process a deposit" << endl;
 		cout << "E – Exit" << endl;
-		cout << "\nEnter transaction type: ";
-		cin >> transactionType;
+		cout << "\nEnter transaction type and amount (if for a check or deposit) separated by a space: ";
+		cin >> transactionType >> transactionAmount;
 		transactionType = toupper(transactionType);
 
 		// Confirm the transaction type is valid
@@ -98,7 +100,7 @@ void getTransactions(double &runningAccountBalance, double serviceCharge, double
 				confirmTransaction(transactionType, transactionAmount);
 				transactionValue = processTransaction(transactionType, transactionAmount, serviceCharge, accumulatedServiceCharges);
 				runningAccountBalance += transactionValue;
-				displayTransactionConfirmation(runningAccountBalance, accumulatedServiceCharges, transactionType);
+				displayTransactionConfirmation(runningAccountBalance, serviceCharge, accumulatedServiceCharges, transactionType);
 			}
 		}
 
@@ -130,25 +132,46 @@ void confirmTransaction(char transactionType, double transactionAmount)
 double processTransaction(char transactionType, double transactionAmount, double serviceCharge, double &accumulatedServiceCharges)
 {
 	// Takes a transaction type and amount and returns the amount
-	// The amount is used by the caller to increment/decrement the running balance
-	double amount = 0;
+    // The amount is used by the caller to increment/decrement the running balance
+    double amount = 0;
 
-	// If transaction is a check, return a negative amount increment accumulatedServiceCharges
 	if (transactionType == 'C')
 	{
-		amount -= transactionAmount;
-		accumulatedServiceCharges += serviceCharge;
+		amount = processCheck(double transactionAmount, double serviceCharge, double &accumulatedServiceCharges);
 	}
 	// If a deposit, just return a positive amount
 	else if (transactionType == 'D')
 	{
-		amount += transactionAmount;
+		amount = processDeposit(double transactionAmount, double serviceCharge, double &accumulatedServiceCharges);
 	}
 	
 	return amount;
 }
 
-void displayTransactionConfirmation(double &runningAccountBalance, double &accumulatedServiceCharges, char transactionType)
+double processCheck(double transactionAmount, double serviceCharge, double &accumulatedServiceCharges)
+{
+	// Takes a transaction type and amount and returns the amount
+	// The amount is used by the caller to increment/decrement the running balance
+	double amount = 0;
+
+	amount -= transactionAmount;
+	accumulatedServiceCharges += serviceCharge;
+	
+	return amount;
+}
+
+double processDeposit(double transactionAmount, double serviceCharge, double &accumulatedServiceCharges)
+{
+	// Takes a transaction type and amount and returns the amount
+	// The amount is used by the caller to increment/decrement the running balance
+	double amount = 0;
+
+	amount += transactionAmount;
+	
+	return amount;
+}
+
+void displayTransactionConfirmation(double &runningAccountBalance, double serviceCharge, double &accumulatedServiceCharges, char transactionType)
 {
 	// Displays the results of a single transaction
 	cout << fixed << setprecision (2);
@@ -157,7 +180,7 @@ void displayTransactionConfirmation(double &runningAccountBalance, double &accum
 	cout << "Balance: $" << runningAccountBalance << endl;
 	if (transactionType == 'C')
 	{
-		cout << "Service charge: $0.25 for a check." << endl;
+		cout << "Service charge: $" << serviceCharge << " for a check." << endl;
 	}
 	cout << "Total service charges: $" << accumulatedServiceCharges << endl;
 }
