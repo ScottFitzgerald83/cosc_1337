@@ -29,6 +29,9 @@ void printConfirmation(char transactionType, double transactionAmount);
 void processEndOfMonth(double currentBal, double totalSvcCharges);
 
 int main() {
+    // Calls other functions to get beginning balance and
+    // get and process transactions
+
     // Declarations
     double beginningBalance = 0;             // user-input beginning balance
     double currentBal = 0;                   // used to store transaction totals
@@ -46,8 +49,11 @@ int main() {
 }
 
 double getBeginningBalance() {
-    // Gets the beginning balance from the user
-    double balance = 0;
+    // Get and validate the beginning balance from the user
+    // Must be a valid number value, positive or negative
+
+    // Declarations
+    double balance = 0;             // Set initial balance to 0
 
     cout << "\nAlly Baba Checkbook Balancing Program" << endl;
     cout << "\nEnter the beginning balance: $";
@@ -63,10 +69,11 @@ double getBeginningBalance() {
 
 void getTransactions(double &currentBal, double &totalSvcCharges, bool &lowBalFeeAssessed) {
     // Gets the type and amount of the transaction from the user
+    // Validates input and returns transaction type and amount
 
     // Declarations
     char tranType = '\0';                // Used to get transaction type from user
-    double tranAmt = 0;        // Used to get transaction amount from user
+    double tranAmt = 0;                  // Used to get transaction amount from user
     double transactionValue = 0;        // Amount by which to increment/decrement running balance
 
     // Loop over transaction menu and input until 'E' is received
@@ -97,6 +104,8 @@ void getTransactions(double &currentBal, double &totalSvcCharges, bool &lowBalFe
 
 void printTransactionMenu() {
     // Prints the transaction menu and instructions
+    // for the user
+
     cout << "\n---------------------------------------------------" << endl;
     cout << "Select Transaction Type: " << endl;
     cout << "C - Process a check" << endl;
@@ -106,7 +115,9 @@ void printTransactionMenu() {
 }
 
 int getTransactionTypeAndAmount(char &tranType, double &tranAmt) {
-    // Get and validate transaction type and amount
+    // Gets and validates transaction type and amount
+
+    // Declarations -- message used for error and retry hint
     string retryMessage = "Enter transaction type and amount separated by a space (ex.: C 42.42): ";
 
     cin >> tranType;
@@ -141,8 +152,11 @@ int getTransactionTypeAndAmount(char &tranType, double &tranAmt) {
 
 double processCheck(double tranAmt, double &totalSvcCharges)
 {
-    // Assesses a service charge for checks and returns debit amount (negative double)
-    double amount = 0;
+    // Assesses a service charge for checks and returns
+    // debit amount (negative double) to decrement account balance
+
+    // Declarations
+    double amount = 0;          // Set amount to zero, then decrement later
 
     amount -= tranAmt;
     totalSvcCharges += CHECKSERVICECHARGE;
@@ -153,7 +167,10 @@ double processCheck(double tranAmt, double &totalSvcCharges)
 double processDeposit(double tranAmt)
 {
     // Process a deposit by returning credit amount (positive double)
-    double amount = 0;
+    // to increment account balance
+
+    // Declarations
+    double amount = 0;          // Set amount to zero, then increment later
 
     amount += tranAmt;
 
@@ -162,8 +179,11 @@ double processDeposit(double tranAmt)
 
 void printConfirmation(char transactionType, double transactionAmount)
 {
-    // Confirm the type and amount of transaction, print results
-    string enumeratedTransactionType;
+    // Confirms the type and amount of transaction,
+    // prints the results for the user
+
+    // Declarations
+    string enumeratedTransactionType;       // Used to store string tran type
 
     if (transactionType == 'C')
     {
@@ -181,6 +201,8 @@ void printConfirmation(char transactionType, double transactionAmount)
 void confirmTransaction(double &currentBal, double &totalSvcCharges, char tranType, bool &lowBalFeeAssessed)
 {
     // Displays the results of a single transaction
+
+    // Set decimal precision to 2 places
     cout << fixed << setprecision (2);
 
     cout << "\nProcessed..." << endl;
@@ -203,6 +225,7 @@ void confirmTransaction(double &currentBal, double &totalSvcCharges, char tranTy
 
 void processEndOfMonth(double currentBal, double totalSvcCharges) {
     // Displays the end of month results
+
     cout << "\nProcessing end of month" << endl;
     cout << "Final balance: $" << currentBal - totalSvcCharges << endl;
 }

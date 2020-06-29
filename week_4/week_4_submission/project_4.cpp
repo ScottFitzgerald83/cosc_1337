@@ -23,6 +23,8 @@ double getAverageFoodEaten(double foodEaten[][NUM_DAYS]);
 void printTable(double foodEaten[][NUM_DAYS], string dayName[NUM_DAYS]);
 
 int main() {
+    // Calls the input food and print table functions
+
     // Variable Declarations
     string dayName[NUM_DAYS] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};  // Days of the week
     double foodEaten[NUM_MONKEYS][NUM_DAYS];                                       // 2D array to hold food amounts
@@ -34,7 +36,9 @@ int main() {
 }
 void inputFoodAmounts(double foodEaten[][NUM_DAYS], string dayName[NUM_DAYS])
 {
-    // Get amount of food per monkey per day from user
+    // Gets the amount of food per monkey per day from user
+
+    // Nested loop to populate 2D array
     for (int monkey = 0; monkey < NUM_MONKEYS; monkey++) {
         for (int day = 0; day < NUM_DAYS; day++) {
             cout << "Enter pounds of food eaten by monkey " << (monkey + 1)
@@ -48,7 +52,9 @@ void inputFoodAmounts(double foodEaten[][NUM_DAYS], string dayName[NUM_DAYS])
 double getLeastFoodEaten(double foodEaten[][NUM_DAYS]) {
     // Returns the minimum amount of food eaten by any monkey on any day
     // Set the minimum to the first value in the first array
-    double leastFoodEaten = foodEaten[0][0];
+
+    // Declarations
+    double leastFoodEaten = foodEaten[0][0];   // Set the minimum to the first array value
 
     // If any subsequent value is lower, set leastFoodEaten to that
     for (int monkey = 0; monkey < NUM_MONKEYS; monkey++) {
@@ -64,7 +70,9 @@ double getLeastFoodEaten(double foodEaten[][NUM_DAYS]) {
 double getMostFoodEaten(double foodEaten[][NUM_DAYS]) {
     // Returns the maximum amount of food eaten by any monkey on any day
     // Set the maximum to the first value in the first array
-    double mostFoodEaten = foodEaten[0][0];
+
+    // Declarations
+    double mostFoodEaten = foodEaten[0][0];     // Set the maximum to the first array value
 
     // If any subsequent value is higher, set mostFoodEaten to that
     for (int monkey = 0; monkey < NUM_MONKEYS; monkey++) {
@@ -80,8 +88,9 @@ double getMostFoodEaten(double foodEaten[][NUM_DAYS]) {
 double getAverageFoodEaten(double foodEaten[][NUM_DAYS])
 {
     // Gets the average amount of food eaten per day by all monkeys
-    // Set an accumulator variable
-    double totalFoodEaten = 0;
+
+    // Declarations
+    double totalFoodEaten = 0;  // Set an accumulator variable
 
     // Add each food amount to the accumulator
     for (int monkey = 0; monkey < NUM_MONKEYS; monkey++) {
@@ -95,21 +104,25 @@ double getAverageFoodEaten(double foodEaten[][NUM_DAYS])
 
 void printTable(double foodEaten[][NUM_DAYS], string dayName[NUM_DAYS])
 {
-    // Print table of food per monkey per day
+    // Prints table of food per monkey per day
+
+    // Print results
     cout << "Pounds of Food Eaten by Monkey and Day of Week\n\n";
     cout << "Monkey\t";
     for (int day = 0; day < NUM_DAYS; day++) {
-        cout << dayName[day] << "\t\t";
+        cout << dayName[day] << "\t";
     }
     cout << endl;
 
     for (int monkey = 0; monkey < NUM_MONKEYS; monkey++) {
-        cout << monkey + 1 << "\t\t";
+        cout << monkey + 1 << "\t";
         for (int day = 0; day < NUM_DAYS; day++) {
-            cout << foodEaten[monkey][day] << "\t\t";
+            cout << foodEaten[monkey][day] << "\t";
         }
         cout << endl;
     }
+
+    // Set decimal precision to 2 places
     cout << fixed << setprecision(2);
     cout << "\nThe average food eaten per day by all monkeys:       "
          << getAverageFoodEaten(foodEaten) << " pounds" << endl;
