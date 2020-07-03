@@ -13,6 +13,7 @@ string getDestFromChar(char location);
 string getStatusFromBool(bool);
 void confirmTransaction(char location, bool accepted, int weight, int cost);
 bool isValidSelection(char shippingLocation);
+void processTransaction(char shippingLocation);
 
 class Parcel {
     // TODO: Add docstring
@@ -31,8 +32,8 @@ class Parcel {
 		int getWeight();
 		int getSvcCharge();
 
-		//      Other functions
-		bool       validateWeightAndSize();
+		// Other functions
+		bool validateWeightAndSize();
 		// Class variables
 		bool isValid;
 		bool accepted;
@@ -92,7 +93,7 @@ void Parcel::setGirth() {
     }
 }
 
-void Parcel::setSvcCharge(char location)             {
+void Parcel::setSvcCharge(char location) {
     // TODO: Add docstring
     if      (location == 'O') {serviceCharge = OUT_OF_STATE_CHARGE;
     }
@@ -108,24 +109,18 @@ int Parcel::getSvcCharge() {
 
 int main() {
     // TODO: Add docstring
-	Parcel box;
 	char shippingLocation;
 	bool validDest;
-	int cost;
 
 	initialMenu();                                   // Display the initial menu
 	shippingLocation = transactionMenu();            // Display the transaction menu
     validDest = isValidSelection(shippingLocation);  // Validate menu selection
-	box.setSvcCharge(shippingLocation);              // Add location-base service charges
-    box.setWeight();                                 // Set the box's weight
-    box.setDimensions();                             // Set the box's dimensions
-    box.setGirth();                                  // Set the box's girth
-    box.validateWeightAndSize();                     // Determine if dimensions/girth are valid
-
-	// TODO: Point to getCost() after implementing function
-	cost = box.getSvcCharge();
-
-    confirmTransaction(shippingLocation, box.accepted, box.getWeight(), cost);
+    if (validDest) {
+        processTransaction(shippingLocation);
+    }
+    else {
+        cout << "Invalid destination, skipping." << endl;
+    }
 
 	return 0;
 }
@@ -149,7 +144,7 @@ char transactionMenu() {
     cout << "Enter Location - (T)exas; (O)ut of state, (F)oreign, e(X)it: ";
     cin >> location;
 
-    return location;
+    return toupper(location);
 }
 
 bool isValidSelection(char shippingLocation) {
@@ -158,6 +153,19 @@ bool isValidSelection(char shippingLocation) {
             shippingLocation == 'O' ||
             shippingLocation == 'F' ||
             shippingLocation == 'X');
+}
+void processTransaction(char shippingLocation) {
+    Parcel box;
+    int cost;
+
+    box.setSvcCharge(shippingLocation);              // Add location-base service charges
+    box.setWeight();                                 // Set the box's weight
+    box.setDimensions();                             // Set the box's dimensions
+    box.setGirth();                                  // Set the box's girth
+    box.validateWeightAndSize();                     // Determine if dimensions/girth are valid
+    // TODO: Point to getCost() after implementing function
+    cost = box.getSvcCharge();
+    confirmTransaction(shippingLocation, box.accepted, box.getWeight(), cost);
 }
 
 string getDestFromChar(char location) {
