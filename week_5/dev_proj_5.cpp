@@ -94,7 +94,7 @@ void Parcel::setGirth() {
 
 void Parcel::setSvcCharge(char location)             {
     // TODO: Add docstring
-    if      (location == 'O') {serviceCharge = OUT_O    F_STATE_       CHARGE;
+    if      (location == 'O') {serviceCharge = OUT_OF_STATE_CHARGE;
     }
     if (location == 'F') {
         serviceCharge = OUT_OF_COUNTRY_CHARGE;
@@ -157,7 +157,7 @@ bool isValidSelection(char shippingLocation) {
     return (shippingLocation == 'T' ||
             shippingLocation == 'O' ||
             shippingLocation == 'F' ||
-            shippingLocation == 'X')
+            shippingLocation == 'X');
 }
 
 string getDestFromChar(char location) {
