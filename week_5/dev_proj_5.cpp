@@ -12,8 +12,10 @@ char transactionMenu();
 string getDestFromChar(char location);
 string getStatusFromBool(bool);
 void confirmTransaction(char location, bool accepted, int weight, int cost);
+bool isValidSelection(char shippingLocation);
 
 class Parcel {
+    // TODO: Add docstring
 	private:
 		int weight = 0;
 		int dimensions[3] = {0, 0, 0};
@@ -24,15 +26,13 @@ class Parcel {
 		void setWeight();
 		void setDimensions();
 		void setGirth();
-		void setServiceCharge(char);
+		void setSvcCharge(char);
         // Getters
 		int getWeight();
-		int getDimension(int);
-		int getGirth();
-		int getServiceCharge();
+		int getSvcCharge();
 
-		// Other functions
-		bool validateWeightAndSize();
+		//      Other functions
+		bool       validateWeightAndSize();
 		// Class variables
 		bool isValid;
 		bool accepted;
@@ -40,6 +40,7 @@ class Parcel {
 };
 
 void Parcel::setWeight() {
+    // TODO: Add docstring
     cout << "Enter the parcel's weight: ";
     cin >> weight;
     if (weight < 0) {
@@ -49,10 +50,12 @@ void Parcel::setWeight() {
 }
 
 int Parcel::getWeight() {
+    // TODO: Add docstring
 	return weight;
 }
 
 void Parcel::setDimensions() {
+    // TODO: Add docstring
     cout << "Enter the length of side 1: ";
     cin >> dimensions[0];
     cout << "Enter the length of side 2: ";
@@ -65,12 +68,8 @@ void Parcel::setDimensions() {
     }
 }
 
-int Parcel::getDimension(int element) {
-    return dimensions[element];
-}
-
 bool Parcel::validateWeightAndSize() {
-
+    // TODO: Add docstring
     // Largest size is the max array element from box dimensions
     int shortestSide = *min_element(dimensions, dimensions + 3);
     int largestSide = *max_element(dimensions, dimensions + 3);
@@ -83,43 +82,48 @@ bool Parcel::validateWeightAndSize() {
 }
 
 void Parcel::setGirth() {
+    // TODO: Add docstring
     int longestSide = *max_element(dimensions , dimensions + 3);
     girth = 2 * (dimensions[0] + dimensions[1] + dimensions[2] - longestSide);
-
+    if (girth > 10) {
+        cout << "Girth must not exceed 10 feet; package will be rejected." << endl;
+        cout << "Girth is calculated by adding the two shortest sides and "
+                "multiplying by 2." << endl;
+    }
 }
 
-int Parcel::getGirth() {
-    return girth;
-}
-
-void Parcel::setServiceCharge(char location) {
-    if (location == 'O') {
-        serviceCharge = OUT_OF_STATE_CHARGE;
+void Parcel::setSvcCharge(char location)             {
+    // TODO: Add docstring
+    if      (location == 'O') {serviceCharge = OUT_O    F_STATE_       CHARGE;
     }
     if (location == 'F') {
         serviceCharge = OUT_OF_COUNTRY_CHARGE;
     }
 }
 
-int Parcel::getServiceCharge() {
+int Parcel::getSvcCharge() {
+    // TODO: Add docstring
     return serviceCharge;
 }
 
 int main() {
+    // TODO: Add docstring
 	Parcel box;
 	char shippingLocation;
+	bool validDest;
 	int cost;
 
-	initialMenu();
-	shippingLocation = transactionMenu();
-	box.setServiceCharge(shippingLocation);
-    box.setWeight();
-    box.setDimensions();
-    box.setGirth();
-    box.validateWeightAndSize();
+	initialMenu();                                   // Display the initial menu
+	shippingLocation = transactionMenu();            // Display the transaction menu
+    validDest = isValidSelection(shippingLocation);  // Validate menu selection
+	box.setSvcCharge(shippingLocation);              // Add location-base service charges
+    box.setWeight();                                 // Set the box's weight
+    box.setDimensions();                             // Set the box's dimensions
+    box.setGirth();                                  // Set the box's girth
+    box.validateWeightAndSize();                     // Determine if dimensions/girth are valid
 
 	// TODO: Point to getCost() after implementing function
-	cost = box.getServiceCharge();
+	cost = box.getSvcCharge();
 
     confirmTransaction(shippingLocation, box.accepted, box.getWeight(), cost);
 
@@ -127,11 +131,13 @@ int main() {
 }
 
 void initialMenu() {
+    // TODO: Add docstring
     cout << "WELCOME TO ALLYBABA SHIPPING SERVICE" << endl;
     cout << "This program calculates a parcel's shipping cost" << endl;
 }
 
 char transactionMenu() {
+    // TODO: Add docstring
     char location;
 
     cout << "************************************************************\n";
@@ -146,7 +152,16 @@ char transactionMenu() {
     return location;
 }
 
+bool isValidSelection(char shippingLocation) {
+    // TODO: Add docstring
+    return (shippingLocation == 'T' ||
+            shippingLocation == 'O' ||
+            shippingLocation == 'F' ||
+            shippingLocation == 'X')
+}
+
 string getDestFromChar(char location) {
+    // TODO: Add docstring
 
     if (location == 'T') {
         return "Texas";
@@ -163,6 +178,7 @@ string getDestFromChar(char location) {
 }
 
 string getStatusFromBool(bool accepted) {
+    // TODO: Add docstring
     if (accepted) {
         return "Accepted";
     }
@@ -170,6 +186,7 @@ string getStatusFromBool(bool accepted) {
 }
 
 void confirmTransaction(char location, bool accepted, int weight, int cost) {
+    // TODO: Add docstring
     string destination;
     int transactionNumber = 1;
     string acceptanceStatus;
@@ -177,7 +194,7 @@ void confirmTransaction(char location, bool accepted, int weight, int cost) {
     destination = getDestFromChar(location);
     acceptanceStatus = getStatusFromBool(accepted);
 
-    cout << "Transaction #" << transactionNumber << endl;
+    cout << "\nTransaction #" << transactionNumber << endl;
     cout << "Destination:    " << destination << endl;
     cout << "Accepted:       " << acceptanceStatus << endl;
     cout << "Weight:         " << weight << endl;
