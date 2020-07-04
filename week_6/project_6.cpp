@@ -10,7 +10,6 @@
 // for all employees.
 #include <iostream>
 #include <string>
-#include <cmath>
 
 using namespace std;
 
@@ -47,9 +46,11 @@ struct WeeklyPayroll {
 
 
 int main() {
-    EmployeeInfo employees[NUM_EMPLOYEES];
-    double hoursWorked[4];
-    WeeklyPayroll employeePay[NUM_EMPLOYEES];
+    // Main function -- coordinates program and calls other functions
+    // to process employee identity info and calculate pay
+    EmployeeInfo employees[NUM_EMPLOYEES];                  // Array of structs, holds master info
+    double hoursWorked[4];                                  // Array to hold num hours worked
+    WeeklyPayroll employeePay[NUM_EMPLOYEES];               // Array of structs, hold pay info
 
     cout << "Armadillo Automotive Group payroll program." << endl;
 
@@ -78,6 +79,8 @@ int main() {
 }
 
 EmployeeInfo getEmployeeInfo(int count) {
+    // Gets master employee information and returns a struct
+    // with id number, name, payrate, and employee type
     EmployeeInfo employee;
 
     cout << "\nEnter information for employee " << count << endl;
@@ -90,6 +93,8 @@ EmployeeInfo getEmployeeInfo(int count) {
 }
 
 int getIdNumber() {
+    // Input handler for getting employee's id number
+    // TODO: Add input validation
     int employeeId;
 
     cout << "Employee ID: ";
@@ -99,6 +104,8 @@ int getIdNumber() {
 }
 
 string getName() {
+    // Input handler for getting an employee's name
+    // TODO: Add input validation
     string employeeName;
 
     cout << "Employee name: ";
@@ -109,7 +116,8 @@ string getName() {
 }
 
 double getPayRate() {
-    // TODO: Implement function
+    // Input handler for getting an employee's pay rate
+    // TODO: Add input validation
     double payRate;
 
     cout << "Pay rate: ";
@@ -120,7 +128,8 @@ double getPayRate() {
 }
 
 int getEmpType() {
-    // TODO: Implement function
+    // Input handler for getting an employee's type (0 for union, 1 for management)
+    // TODO: Add input validation
     int employeeType = 0;
 
     cout << "Type: ";
@@ -131,6 +140,8 @@ int getEmpType() {
 }
 
 double getTimecardInfo(const string& empName) {
+    // Input handler for getting number of hours worked
+    // TODO: Add input validation
     double hours;
 
     cout << "Enter hours worked for " << empName << ": ";
@@ -140,8 +151,10 @@ double getTimecardInfo(const string& empName) {
 }
 
 WeeklyPayroll processWeeklyPayroll(double numHours, double payRate) {
-    WeeklyPayroll employeePay;
-    double overtimePay = 0;
+    // Calculates weekly gross pay, income tax rate, and net pay
+    // Returns a WeeklyPayroll struct
+    WeeklyPayroll employeePay;                              // Struct to hold pay
+    double overtimePay = 0;                                 // Used to store overtime pay
 
     // Calculate gross pay -- overtime is worth 1.5x
     if (numHours > 40) {
@@ -162,6 +175,7 @@ WeeklyPayroll processWeeklyPayroll(double numHours, double payRate) {
 }
 
 void payrollReport() {
+    // Prints the weekly payroll report to the console
     // TODO: Implement function
     cout << "\nResults";
     cout << "*******\n\n";
