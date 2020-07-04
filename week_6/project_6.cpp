@@ -94,12 +94,16 @@ EmployeeInfo getEmployeeInfo(int count) {
 
 int getIdNumber() {
     // Input handler for getting employee's id number
-    // should be positive numbers (greater than 0)
-    // TODO: Add input validation
-    int employeeId;
+    // Validates that id number is a positive number
+    int employeeId = -1;
 
     cout << "Employee ID: ";
-    cin >> employeeId;
+    while (!(cin >> employeeId) || employeeId < 0) {
+        cout << "ERROR! employee ID must be greater than 0" << endl;
+        cout << "Employee ID: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     return employeeId;
 }
