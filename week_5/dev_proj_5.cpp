@@ -3,9 +3,9 @@
 // Status: In Progress
 // Date: 2020-07-02
 
-// Program for calculating shipping costs based on destination
-// and parcel dimensions. Uses a Parcel class and members to confirm
-// valid input and calculate costs.
+// Program for calculating and display shipping costs based on destination
+// and parcel dimensions. Uses a Parcel class and members to confirm packages
+// meet size/weight requirements.
 
 #include <iostream>
 #include <iomanip>
@@ -24,14 +24,13 @@ const int OUT_OF_COUNTRY_CHARGE = 40;             // Out of country service char
 // Function prototypes
 void initialMenu();
 char transactionMenu();
-string getDestFromChar(char location);
+bool isValidSelection(char);
+void processTransaction(int&, int&, int&, char, double&);
+double calcCost(int);
+string getDestFromChar(char);
 string getStatusFromBool(bool);
-void confirmTransaction(int& numAccepted, int& numRejected, int& transNumber, char location, bool accepted, int weight,
-                        double cost);
-bool isValidSelection(char shippingLocation);
-void processTransaction(int& numAccepted, int& numRejected, int& transNumber, char shippingLocation, double& totalCost);
-double calcCost(int parcelWeight);
-void displaySummary(int &transNumber, int numAccepted, int numRejected, double& totalCost);
+void confirmTransaction(int&, int&, int&, char, bool, int, double);
+void displaySummary(int&, int, int, double&);
 
 class Parcel {
     // Parcel class used to instantiate objects
@@ -50,15 +49,15 @@ public:
     void setSvcCharge(char);        // Set relevant service charges
 
     // Getters
-    int getWeight();                // Get the parcel's weight
-    int getSvcCharge();             // Get any service charge
+    int getWeight() const;          // Get the parcel's weight
+    int getSvcCharge() const;       // Get any service charge
 
     // Other functions
     bool validateWeightAndSize();   // Check weight and size inputs
 
     // Class variables
-    bool isValid;                   // Whether the dimensions/sides/weight are valid
-    bool accepted;                  // Whether the parcel was accepted
+    bool isValid{};                 // Whether the dimensions/sides/weight are valid
+    bool accepted{};                // Whether the parcel was accepted
 
 };
 
@@ -74,7 +73,7 @@ void Parcel::setWeight() {
     }
 }
 
-int Parcel::getWeight() {
+int Parcel::getWeight() const {
     // Getter for fetching the object's weight
     return weight;
 }
@@ -145,7 +144,7 @@ void Parcel::setSvcCharge(char location) {
     }
 }
 
-int Parcel::getSvcCharge() {
+int Parcel::getSvcCharge() const {
     // Getter to return the service charge
     return serviceCharge;
 }
@@ -214,7 +213,8 @@ bool isValidSelection(char shippingLocation) {
             shippingLocation == 'X');
 }
 
-void processTransaction(int &numAccepted, int &numRejected, int &transNumber, char shippingLocation, double &totalCost) {
+void processTransaction(int &numAccepted, int &numRejected, int &transNumber,
+                        char shippingLocation, double &totalCost) {
     // Takes a valid shipping location, creates an instance of the
     // Parcel class, sets its attributes, and confirms the transaction
     Parcel box;
@@ -230,7 +230,10 @@ void processTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
     shippingCost = calcCost(box.getWeight());        // Calculate shipping cost based on weight
     shippingCharge = box.getSvcCharge();             // Calculate shipping charges
     transCost = shippingCost + shippingCharge;       // Add charges to cost
-    confirmTransaction(numAccepted, numRejected, transNumber, shippingLocation, box.accepted, box.getWeight(), transCost);
+    confirmTransaction(numAccepted, numRejected, transNumber, shippingLocation,
+                        box.accepted, box.getWeight(), transCost);
+
+    // Only increment totalCost if parcel is accepted
     if (box.accepted) {
         totalCost += transCost;
     }
@@ -239,7 +242,7 @@ void processTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
 double calcCost(int parcelWeight) {
     // Calculates a shipping cost for a given weight
     // Does so by searching through an array for a weight,
-    // then finding the corresponding charge
+    // then finding the element in the charge array with the same index
 
     int weight[] = {1, 2, 3, 5, 7, 10, 13, 16, 20, 25, 30, 35, 40, 45, 50};
     double charge[] = {1.50, 2.10, 4.00, 6.75, 9.90, 14.95, 19.40, 24.20, 27.30,
@@ -257,8 +260,7 @@ double calcCost(int parcelWeight) {
 }
 
 string getDestFromChar(char location) {
-    // Takes a char and returns a string representing
-    // the parcel's destination
+    // Takes a char and returns a string representing the parcel's destination
 
     if (location == 'T') {
         return "Texas";
@@ -272,8 +274,7 @@ string getDestFromChar(char location) {
 }
 
 string getStatusFromBool(bool accepted) {
-    // Takes a bool and returns a string representing
-    // whether or not the parcel was accepted
+    // Takes a bool and returns a string representing whether or not the parcel was accepted
 
     if (accepted) {
         return "Accepted";
@@ -281,10 +282,9 @@ string getStatusFromBool(bool accepted) {
     return "Rejected";
 }
 
-void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, char location, bool accepted, int weight,
-                        double cost) {
-    // Takes a valid transaction and prints the details
-    // of that transaction to the screen
+void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber,
+                        char location, bool accepted, int weight, double cost) {
+    // Takes a valid transaction and prints the details of that transaction to the screen
 
     // Declarations
     string destination;                                   // String representing destination
@@ -313,7 +313,7 @@ void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
     } else {
         numRejected += 1;
     }
-
+    // Increment transaction number
     transNumber += 1;
 }
 
