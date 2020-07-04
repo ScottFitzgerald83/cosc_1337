@@ -10,6 +10,7 @@
 // for all employees.
 #include <iostream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
@@ -19,6 +20,10 @@ const int NUM_EMPLOYEES = 4;
 // Function prototypes
 struct Payroll;
 Payroll getEmployeeInfo(int);
+int getIdNumber();
+string getName();
+double getPayRate();
+int getEmpType();
 
 void payrollReport();
 
@@ -43,9 +48,8 @@ int main() {
 Payroll getEmployeeInfo(int count) {
     Payroll employee;
 
-    cout << "Enter information for employee " << count << endl;
-    cout << "Employee ID: ";
-    cin >> employee.empId;
+    cout << "\nEnter information for employee " << count << endl;
+    employee.empId = getIdNumber();
     cout << "Employee name: ";
     cin.get();
     getline(cin, employee.empName);
@@ -57,7 +61,41 @@ Payroll getEmployeeInfo(int count) {
     return employee;
 }
 
+int getIdNumber() {
+    int employeeId;
+
+    cout << "Employee ID: ";
+    cin >> employeeId;
+
+    return employeeId;
+}
+
+string getName() {
+    // TODO: Implement function
+    string employeeName;
+
+    return employeeName;
+}
+
+double getPayRate() {
+    // TODO: Implement function
+    double payRate;
+
+    return payRate;
+
+}
+
+int getEmpType() {
+    // TODO: Implement function
+    int employeeType = 0;
+
+    return employeeType;
+
+}
+
+
 void payrollReport() {
+    // TODO: Implement function
     cout << "\nResults";
     cout << "*******\n\n";
 }
