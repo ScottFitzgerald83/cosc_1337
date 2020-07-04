@@ -1,6 +1,6 @@
 // Scott Fitzgerald
 // Project #5
-// Status: In Progress
+// Status: Completed
 // Date: 2020-07-02
 
 // Program for calculating and display shipping costs based on destination
