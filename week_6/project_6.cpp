@@ -134,11 +134,16 @@ double getPayRate() {
 
 int getEmpType() {
     // Input handler for getting an employee's type (0 for union, 1 for management)
-    // TODO: Add input validation: Employee type should be 0 or 1.
-    int employeeType = 0;
+    // Validates that employee is either 0 or 1.
+    int employeeType = -1;
 
-    cout << "Type: ";
-    cin >> employeeType;
+    cout << "Employee type (0 for union, 1 for management): ";
+    while (!(cin >> employeeType) || (employeeType != 0 && employeeType != 1)) {
+        cout << "ERROR! Employee type must be 0 or 1" << endl;
+        cout << "Employee type: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     return employeeType;
 
