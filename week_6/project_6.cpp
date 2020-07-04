@@ -15,34 +15,34 @@
 using namespace std;
 
 // Global constants
-const int NUM_EMPLOYEES = 2;
-const double INCOME_TAX_RATE = .15;
+const int NUM_EMPLOYEES = 2;                                // Number of employees
+const double INCOME_TAX_RATE = .15;                         // Flat tax rate
 
 // Function prototypes
-struct EmployeeInfo;
-struct WeeklyPayroll;
-EmployeeInfo getEmployeeInfo(int);
-int getIdNumber();
-string getName();
-double getPayRate();
-int getEmpType();
-double getTimecardInfo(const string&);
-WeeklyPayroll processWeeklyPayroll(double, double);
-void payrollReport();
+struct EmployeeInfo;                                        // Struct to hold master employee info
+struct WeeklyPayroll;                                       // Struct to hold weekly per-employee payroll info
+EmployeeInfo getEmployeeInfo(int);                          // Gets employee info, returns struct
+int getIdNumber();                                          // Get employee id number
+string getName();                                           // Get employee name
+double getPayRate();                                        // Get employee hourly pay rate
+int getEmpType();                                           // Get employee type
+double getTimecardInfo(const string&);                      // Get number of hours worked per employee
+WeeklyPayroll processWeeklyPayroll(double, double);         // Process gross pay/income tax/net pay calculations
+void payrollReport();                                       // Print payroll report
 
 struct EmployeeInfo {
-    int empId{};
-    string empName;
-    double hourlyPayRate{};
-    int empType{};
+    int empId{};                                            // Employee's id number
+    string empName;                                         // Employee's name
+    double hourlyPayRate{};                                 // Employee's hourly pay rate
+    int empType{};                                          // Employee type (0 - union, 1 - management)
 };
 
 struct WeeklyPayroll {
-    int empId{};
-    string empName;
-    double grossPay{};
-    double incomeTax{};
-    double netPay{};
+    int empId{};                                             // Employee id number
+    string empName;                                          // Employee name
+    double grossPay{};                                       // Weekly gross pay
+    double incomeTax{};                                      // Weekly income tax
+    double netPay{};                                         // Weekly net pay
 };
 
 
