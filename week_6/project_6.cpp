@@ -26,7 +26,7 @@ string getName();                                           // Get employee name
 double getPayRate();                                        // Get employee hourly pay rate
 int getEmpType();                                           // Get employee type
 double getTimecardInfo(const string&);                      // Get number of hours worked per employee
-WeeklyPayroll processWeeklyPayroll(double, double);         // Process gross pay/income tax/net pay calculations
+WeeklyPayroll processWeeklyPayroll(double, double, int);    // Process gross pay/income tax/net pay calculations
 void payrollReport();                                       // Print payroll report
 
 struct EmployeeInfo {
@@ -68,12 +68,10 @@ int main() {
 
     // Process payroll info
     for (int i = 0; i < NUM_EMPLOYEES; i++) {
-        employeePay[i] = processWeeklyPayroll(hoursWorked[i], employees[i].hourlyPayRate);
+        employeePay[i] = processWeeklyPayroll(hoursWorked[i], employees[i].hourlyPayRate, employees[i].empType);
         employeePay[i].empId = employees[i].empId;
         employeePay[i].empName = employees[i].empName;
     }
-
-    cout << endl;
 
     return 0;
 }
@@ -169,14 +167,14 @@ double getTimecardInfo(const string& empName) {
     return hours;
 }
 
-WeeklyPayroll processWeeklyPayroll(double numHours, double payRate) {
+WeeklyPayroll processWeeklyPayroll(double numHours, double payRate, int empType) {
     // Calculates weekly gross pay, income tax rate, and net pay
     // Returns a WeeklyPayroll struct
     WeeklyPayroll employeePay;                              // Struct to hold pay
     double overtimePay = 0;                                 // Used to store overtime pay
 
     // Calculate gross pay -- overtime is worth 1.5x
-    if (numHours > 40) {
+    if (numHours > 40 && empType == 0) {
         overtimePay = (numHours - 40) * 1.5 * payRate;
         employeePay.grossPay = payRate * 40 + overtimePay;
     } else {
