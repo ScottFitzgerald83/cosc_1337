@@ -3,7 +3,7 @@
 // Status: In Progress
 // Date: 2020-07-02
 
-// Program for caclulating shipping costs based on destination
+// Program for calculating shipping costs based on destination
 // and parcel dimensions. Uses a Parcel class and members to confirm
 // valid input and calculate costs.
 
@@ -14,20 +14,24 @@
 using namespace std;
 
 // Global constants
-int OUT_OF_STATE_CHARGE = 35;               // Out of state service charge
-int OUT_OF_COUNTRY_CHARGE = 40;            // Out of country service charge
+const int MAX_WEIGHT = 50;                        // Maximum allowed weight
+const int MIN_SIDE_LENGTH_INCHES = 0;             // Used to validate side lengths
+const int MAX_SIDE_LENGTH_INCHES = 72;            // Max allowed side length
+const int MAX_GIRTH_INCHES = 120;                 // Max allowed girth
+const int OUT_OF_STATE_CHARGE = 35;               // Out of state service charge
+const int OUT_OF_COUNTRY_CHARGE = 40;             // Out of country service charge
 
 // Function prototypes
 void initialMenu();
 char transactionMenu();
 string getDestFromChar(char location);
 string getStatusFromBool(bool);
-void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, char location, bool accepted, int weight,
+void confirmTransaction(int& numAccepted, int& numRejected, int& transNumber, char location, bool accepted, int weight,
                         double cost);
 bool isValidSelection(char shippingLocation);
-void processTransaction(int &numAccepted, int &numRejected, int &transNumber, char shippingLocation);
+void processTransaction(int& numAccepted, int& numRejected, int& transNumber, char shippingLocation, double& totalCost);
 double calcCost(int parcelWeight);
-void displaySummary(int &transNumber, int numAccepted, int numRejected);
+void displaySummary(int &transNumber, int numAccepted, int numRejected, double& totalCost);
 
 class Parcel {
     // Parcel class used to instantiate objects
@@ -62,7 +66,7 @@ void Parcel::setWeight() {
     // Setter for assigning a weight to the object
     // Checks that the input weight is a positive number
 
-    cout << "Enter the parcel's weight: ";
+    cout << "Enter the parcel's weight (in pounds): ";
     cin >> weight;
     if (weight < 0) {
         cout << "Weight must be a positive number. Skipping transaction.\n";
@@ -80,12 +84,11 @@ void Parcel::setDimensions() {
     // Uses the dimensions[] array rather than three separate members
     // Checks that all sides are positive numbers
 
-    cout << "Enter the length of side 1: ";
-    cin >> dimensions[0];
-    cout << "Enter the length of side 2: ";
-    cin >> dimensions[1];
-    cout << "Enter the length of side 3: ";
-    cin >> dimensions[2];
+    for (int i = 0; i < 3; i++) {
+        cout << "Enter the length of side " << i + 1 << " (in inches): ";
+        cin >> dimensions[i];
+    }
+
     if (*min_element(dimensions, dimensions + 3) < 0) {
         cout << "All sides must be positive numbers. Skipping transaction\n";
         isValid = false;
@@ -99,8 +102,14 @@ bool Parcel::validateWeightAndSize() {
     // Largest size is the max array element from box dimensions
     int shortestSide = *min_element(dimensions, dimensions + 3);
     int largestSide = *max_element(dimensions, dimensions + 3);
+
     // Check if box meets weight, size, and girth requirements
-    isValid = weight <= 50 && shortestSide > 0 && largestSide <= 6 && girth <= 10;
+    isValid = (weight <= MAX_WEIGHT &&
+               shortestSide > MIN_SIDE_LENGTH_INCHES &&
+               largestSide <= MAX_SIDE_LENGTH_INCHES &&
+               girth <= MAX_GIRTH_INCHES);
+
+    // If valid dimensions, set isValid and accepted bools to true
     if (isValid) {
         accepted = true;
     } else {
@@ -116,7 +125,7 @@ void Parcel::setGirth() {
 
     int longestSide = *max_element(dimensions, dimensions + 3);
     girth = 2 * (dimensions[0] + dimensions[1] + dimensions[2] - longestSide);
-    if (girth > 10) {
+    if (girth > MAX_GIRTH_INCHES) {
         cout << "ERROR! Girth must not exceed 10 feet; package will be rejected." << endl;
         cout << "Girth is calculated by adding the two shortest sides and "
                 "multiplying by 2." << endl;
@@ -150,6 +159,7 @@ int main() {
     int transNumber = 1;                           // Counter for transaction display
     int numAccepted = 0;                           // Counter for num accepted parcels
     int numRejected = 0;                           // Counter for num rejected parcels
+    double totalCost = 0;                          // Total cost for all transactions
 
     initialMenu();                                 // Display the initial menu
     while (true) {
@@ -160,13 +170,13 @@ int main() {
         validDest = isValidSelection(shippingLocation);  // Validate menu selection
 
         if (validDest) {
-            processTransaction(numAccepted, numRejected, transNumber, shippingLocation);
+            processTransaction(numAccepted, numRejected, transNumber, shippingLocation, totalCost);
         } else {
             cout << "Invalid destination, skipping." << endl;
         }
     }
 
-    displaySummary(transNumber, numAccepted, numRejected);
+    displaySummary(transNumber, numAccepted, numRejected, totalCost);
 
     return 0;
 }
@@ -204,7 +214,7 @@ bool isValidSelection(char shippingLocation) {
             shippingLocation == 'X');
 }
 
-void processTransaction(int &numAccepted, int &numRejected, int &transNumber, char shippingLocation) {
+void processTransaction(int &numAccepted, int &numRejected, int &transNumber, char shippingLocation, double &totalCost) {
     // Takes a valid shipping location, creates an instance of the
     // Parcel class, sets its attributes, and confirms the transaction
     Parcel box;
@@ -217,10 +227,13 @@ void processTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
     box.setDimensions();                             // Set the box's dimensions
     box.setGirth();                                  // Set the box's girth
     box.validateWeightAndSize();                     // Determine if dimensions/girth are valid
-    shippingCost = calcCost(box.getWeight());        // TODO: Point to getCost() after implementing function
-    shippingCharge = box.getSvcCharge();             // TODO: Point to getCost() after implementing function
-    transCost = shippingCost + shippingCharge;
+    shippingCost = calcCost(box.getWeight());        // Calculate shipping cost based on weight
+    shippingCharge = box.getSvcCharge();             // Calculate shipping charges
+    transCost = shippingCost + shippingCharge;       // Add charges to cost
     confirmTransaction(numAccepted, numRejected, transNumber, shippingLocation, box.accepted, box.getWeight(), transCost);
+    if (box.accepted) {
+        totalCost += transCost;
+    }
 }
 
 double calcCost(int parcelWeight) {
@@ -281,19 +294,18 @@ void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
     destination = getDestFromChar(location);              // Get string repr of location char
     acceptanceStatus = getStatusFromBool(accepted);       // Get string rep of status bool
 
-    // Set cost to N/A for rejected parcels, otherwise prepend $
-    if (!(accepted)) {
-        displayCost = "N/A";
-    } else {
-        displayCost = "$" + displayCost;
-    }
-
     // Display results for each transaction
+    // Set cost to N/A for rejected parcels
     cout << "\nTransaction # " << transNumber << endl;
     cout << "Destination:    " << destination << endl;
     cout << "Accepted:       " << acceptanceStatus << endl;
     cout << "Weight:         " << weight << endl;
-    cout << "Shipping cost:  " << setw(2) << displayCost << endl;
+    if (accepted) {
+        cout << fixed << setprecision(2);
+        cout << "Shipping cost:  $"  << cost << endl;
+    } else {
+        cout << "Shipping cost:  N/A" << endl;
+    }
 
     // Increment number of accepted or rejected packages
     if (accepted) {
@@ -305,11 +317,11 @@ void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
     transNumber += 1;
 }
 
-void displaySummary(int &transNumber, int numAccepted, int numRejected) {
+void displaySummary(int &transNumber, int numAccepted, int numRejected, double &totalCost) {
     // Display stats on number of accepted/rejected package, along
     // with cost, to the user
 
     cout << "\nNumber of accepted packages: " << numAccepted;
     cout << "\nNumber of rejected packages: " << numRejected;
-    cout << "\nTotal Cost:                 $" << endl;
+    cout << "\nTotal Cost:                  $" << totalCost << endl;
 }
