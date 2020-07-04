@@ -5,3 +5,4 @@ cmake-build-debug/
 week_5/week_5_sumbission/
 exams/
 .idea/
+*.out
