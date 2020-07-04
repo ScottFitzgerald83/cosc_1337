@@ -9,12 +9,13 @@
 // you should use an array of structs to hold the employee information
 // for all employees.
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 using namespace std;
 
 // Global constants
-const int NUM_EMPLOYEES = 2;                                // Number of employees
+const int NUM_EMPLOYEES = 4;                                // Number of employees
 const double INCOME_TAX_RATE = .15;                         // Flat tax rate
 
 // Function prototypes
@@ -27,21 +28,21 @@ double getPayRate();                                        // Get employee hour
 int getEmpType();                                           // Get employee type
 double getTimecardInfo(const string&);                      // Get number of hours worked per employee
 WeeklyPayroll processWeeklyPayroll(double, double, int);    // Process gross pay/income tax/net pay calculations
-void payrollReport();                                       // Print payroll report
+void payrollReport(EmployeeInfo[], WeeklyPayroll[]);        // Print payroll report
 
 struct EmployeeInfo {
-    int empId{};                                            // Employee's id number
-    string empName;                                         // Employee's name
-    double hourlyPayRate{};                                 // Employee's hourly pay rate
-    int empType{};                                          // Employee type (0 - union, 1 - management)
+    int empId;                 // Employee's id number
+    string empName;            // Employee's name
+    double hourlyPayRate;      // Employee's hourly pay rate
+    int empType;               // Employee type (0 - union, 1 - management)
 };
 
 struct WeeklyPayroll {
-    int empId{};                                             // Employee id number
-    string empName;                                          // Employee name
-    double grossPay{};                                       // Weekly gross pay
-    double incomeTax{};                                      // Weekly income tax
-    double netPay{};                                         // Weekly net pay
+    int empId;                 // Employee id number
+    string empName;            // Employee name
+    double grossPay;           // Weekly gross pay
+    double incomeTax;          // Weekly income tax
+    double netPay;             // Weekly net pay
 };
 
 
@@ -73,6 +74,7 @@ int main() {
         employeePay[i].empName = employees[i].empName;
     }
 
+    payrollReport(employees, employeePay);
     return 0;
 }
 
@@ -191,9 +193,36 @@ WeeklyPayroll processWeeklyPayroll(double numHours, double payRate, int empType)
 
 }
 
-void payrollReport() {
+void payrollReport(EmployeeInfo employees[], WeeklyPayroll employeePay[]) {
     // Prints the weekly payroll report to the console
-    // TODO: Implement function
-    cout << "\nResults";
-    cout << "*******\n\n";
+    double totalGrossPay = 0;
+    double totalNetPay = 0;
+
+    // Set decimal precision to 2 and print header
+    cout << fixed << setprecision(2);
+    cout << "\nPayroll report\n" << endl;
+
+    // Set up header row widths and alignment
+    cout << left << setw(4)  << "ID"
+                 << setw(20) << "Name" <<
+           right << setw(11) << "Gross Pay"
+                 << setw(11) << "Tax"
+                 << setw(11) << "Net Pay" << endl;
+
+    // For each employee, loop through Structs to get and print
+    // identity and pay information
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        cout << left << setw(4) << employees[i].empId
+                     << setw(20) << employees[i].empName <<
+               right << setw(11) << employeePay[i].grossPay
+                     << setw(11) << employeePay[i].incomeTax
+                     << setw(11) << employeePay[i].netPay << endl;
+        totalGrossPay += employeePay[i].grossPay;
+        totalNetPay += employeePay[i].netPay;
+    }
+
+    cout << "\nTotal Gross Pay: $" << totalGrossPay;
+    cout << "\nTotal Gross Pay: $" << totalNetPay;
+
+    cout << "\n\nPress any key to continue . . . " << endl;
 }
