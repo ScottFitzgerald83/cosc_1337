@@ -8,6 +8,7 @@
 // valid input and calculate costs.
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 using namespace std;
@@ -21,10 +22,12 @@ void initialMenu();
 char transactionMenu();
 string getDestFromChar(char location);
 string getStatusFromBool(bool);
-void confirmTransaction(int& numAccepted, int& numRejected, int& transNumber, char location, bool accepted, int weight, int cost);
+void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, char location, bool accepted, int weight,
+                        double cost);
 bool isValidSelection(char shippingLocation);
-void processTransaction(int& numAccepted, int& numRejected, int& transNumber, char shippingLocation);
-void displaySummary(int& transNumber, int numAccepted, int numRejected);
+void processTransaction(int &numAccepted, int &numRejected, int &transNumber, char shippingLocation);
+double calcCost(int parcelWeight);
+void displaySummary(int &transNumber, int numAccepted, int numRejected);
 
 class Parcel {
     // Parcel class used to instantiate objects
@@ -90,9 +93,8 @@ void Parcel::setDimensions() {
 }
 
 bool Parcel::validateWeightAndSize() {
-    // Used to check that the weight and sides are positive
-    // If package meets requirements, set isValid and isAccepted
-    // bools to true
+    // Used to check that the weight and sides are positive. If package
+    // meets requirements, set isValid and isAccepted bools to true
 
     // Largest size is the max array element from box dimensions
     int shortestSide = *min_element(dimensions, dimensions + 3);
@@ -142,16 +144,17 @@ int Parcel::getSvcCharge() {
 int main() {
     // Main function; prints the welcome menu and iterates over a loop
     // of transactions until 'X' is received for shipping location
-    char shippingLocation;
-    bool validDest;
-    int transNumber = 1;
-    int numAccepted = 0;
-    int numRejected = 0;
 
-    initialMenu();                                       // Display the initial menu
+    char shippingLocation;                         // Char representing destination
+    bool validDest;                                // Whether the input for destination is valid
+    int transNumber = 1;                           // Counter for transaction display
+    int numAccepted = 0;                           // Counter for num accepted parcels
+    int numRejected = 0;                           // Counter for num rejected parcels
+
+    initialMenu();                                 // Display the initial menu
     while (true) {
-        shippingLocation = transactionMenu();            // Display the transaction menu
-        if (shippingLocation == 'X') {                   // If 'X' is received, break loop
+        shippingLocation = transactionMenu();      // Display the transaction menu
+        if (shippingLocation == 'X') {             // If 'X' is received, break loop
             break;
         }
         validDest = isValidSelection(shippingLocation);  // Validate menu selection
@@ -205,15 +208,39 @@ void processTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
     // Takes a valid shipping location, creates an instance of the
     // Parcel class, sets its attributes, and confirms the transaction
     Parcel box;
-    int cost;
+    double shippingCost = 0;
+    int shippingCharge = 0;
+    double transCost = 0;
 
     box.setSvcCharge(shippingLocation);              // Add location-base service charges
     box.setWeight();                                 // Set the box's weight
     box.setDimensions();                             // Set the box's dimensions
     box.setGirth();                                  // Set the box's girth
     box.validateWeightAndSize();                     // Determine if dimensions/girth are valid
-    cost = box.getSvcCharge();                       // TODO: Point to getCost() after implementing function
-    confirmTransaction(numAccepted, numRejected, transNumber, shippingLocation, box.accepted, box.getWeight(), cost);
+    shippingCost = calcCost(box.getWeight());        // TODO: Point to getCost() after implementing function
+    shippingCharge = box.getSvcCharge();             // TODO: Point to getCost() after implementing function
+    transCost = shippingCost + shippingCharge;
+    confirmTransaction(numAccepted, numRejected, transNumber, shippingLocation, box.accepted, box.getWeight(), transCost);
+}
+
+double calcCost(int parcelWeight) {
+    // Calculates a shipping cost for a given weight
+    // Does so by searching through an array for a weight,
+    // then finding the corresponding charge
+
+    int weight[] = {1, 2, 3, 5, 7, 10, 13, 16, 20, 25, 30, 35, 40, 45, 50};
+    double charge[] = {1.50, 2.10, 4.00, 6.75, 9.90, 14.95, 19.40, 24.20, 27.30,
+                       31.90, 38.50, 43.50, 44.80, 47.40, 55.20};
+    int count = 0;
+
+    while (parcelWeight >= weight[count]) {
+        if (parcelWeight == weight[count]) {
+            break;
+        }
+        count += 1;
+    }
+
+    return charge[count];
 }
 
 string getDestFromChar(char location) {
@@ -241,22 +268,34 @@ string getStatusFromBool(bool accepted) {
     return "Rejected";
 }
 
-void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, char location, bool accepted, int weight, int cost) {
+void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, char location, bool accepted, int weight,
+                        double cost) {
     // Takes a valid transaction and prints the details
     // of that transaction to the screen
 
-    string destination;
-    string acceptanceStatus;
+    // Declarations
+    string destination;                                   // String representing destination
+    string acceptanceStatus;                              // String representing acceptance/rejection
+    string displayCost = to_string(cost);                 // String representing cost
 
-    destination = getDestFromChar(location);
-    acceptanceStatus = getStatusFromBool(accepted);
+    destination = getDestFromChar(location);              // Get string repr of location char
+    acceptanceStatus = getStatusFromBool(accepted);       // Get string rep of status bool
 
+    // Set cost to N/A for rejected parcels, otherwise prepend $
+    if (!(accepted)) {
+        displayCost = "N/A";
+    } else {
+        displayCost = "$" + displayCost;
+    }
+
+    // Display results for each transaction
     cout << "\nTransaction # " << transNumber << endl;
     cout << "Destination:    " << destination << endl;
     cout << "Accepted:       " << acceptanceStatus << endl;
     cout << "Weight:         " << weight << endl;
-    cout << "Shipping cost: $" << cost << endl;                     // TODO: Print N/A if rejected
+    cout << "Shipping cost:  " << setw(2) << displayCost << endl;
 
+    // Increment number of accepted or rejected packages
     if (accepted) {
         numAccepted += 1;
     } else {
@@ -267,7 +306,10 @@ void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, ch
 }
 
 void displaySummary(int &transNumber, int numAccepted, int numRejected) {
-    cout << "Number of accepted packages:" << numAccepted;
-    cout << "Number of rejected packages" << numRejected;
-    cout << "Total Cost $XXX.XX" << endl;
+    // Display stats on number of accepted/rejected package, along
+    // with cost, to the user
+
+    cout << "\nNumber of accepted packages: " << numAccepted;
+    cout << "\nNumber of rejected packages: " << numRejected;
+    cout << "\nTotal Cost:                 $" << endl;
 }
