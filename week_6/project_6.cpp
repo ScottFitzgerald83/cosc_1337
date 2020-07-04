@@ -24,6 +24,7 @@ int getIdNumber();
 string getName();
 double getPayRate();
 int getEmpType();
+double getTimecardInfo(string&);
 
 void payrollReport();
 
@@ -36,12 +37,24 @@ struct Payroll {
 
 int main() {
     Payroll employees[NUM_EMPLOYEES];
+    double hoursWorked[4];
 
     cout << "Armadillo Automotive Group payroll program." << endl;
 
+    // Loop over number of employees to get info and
+    // add details to Struct array `employees`
     for (int i = 0; i < NUM_EMPLOYEES; i++) {
         employees[i] = getEmployeeInfo(i + 1);
     }
+
+    // Loop through employees to get num hours worked
+    cout << "\nEnter timecard information for each employee: " << endl;
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        hoursWorked[i] = getTimecardInfo(employees[i].empName);
+    }
+
+    cout << endl;
+
     return 0;
 }
 
@@ -98,6 +111,14 @@ int getEmpType() {
 
 }
 
+double getTimecardInfo(string& empName) {
+    double hours;
+
+    cout << "Enter hours worked for " << empName << ": ";
+    cin >> hours;
+
+    return hours;
+}
 
 void payrollReport() {
     // TODO: Implement function
