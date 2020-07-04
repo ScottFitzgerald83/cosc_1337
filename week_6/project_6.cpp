@@ -155,11 +155,16 @@ int getEmpType() {
 
 double getTimecardInfo(const string& empName) {
     // Input handler for getting number of hours worked
-    // TODO: Add input validation: should be non-negative
+    // Validates number of hours worked is a positive number
     double hours;
 
     cout << "Enter hours worked for " << empName << ": ";
-    cin >> hours;
+    while (!(cin >> hours) || hours < 0 ) {
+        cout << "ERROR! Hours worked must be a positive number" << endl;
+        cout << "Hours worked for " << empName << ": ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     return hours;
 }
