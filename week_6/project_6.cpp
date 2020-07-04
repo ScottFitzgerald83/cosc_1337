@@ -1,13 +1,11 @@
 // Scott Fitzgerald
 // Project #6
-// Status: In Progress
+// Status: Completed
 // Date: 2020-07-04
 
-// Payroll program for Armadillo Automotive Group.
-// In this assignment you must create and use a struct to hold
-// the general employee information for one employee. Ideally,
-// you should use an array of structs to hold the employee information
-// for all employees.
+// Payroll program for Armadillo Automotive Group. Uses structs to separately store
+// employee information and payroll information. Accepts user input to get this information,
+// then calculates and displays weekly payroll.
 #include <iostream>
 #include <iomanip>
 #include <string>
