@@ -56,8 +56,8 @@ public:
     bool validateWeightAndSize();   // Check weight and size inputs
 
     // Class variables
-    bool isValid{};                 // Whether the dimensions/sides/weight are valid
-    bool accepted{};                // Whether the parcel was accepted
+    bool isValid;                 // Whether the dimensions/sides/weight are valid
+    bool accepted;                // Whether the parcel was accepted
 
 };
 
