@@ -18,16 +18,17 @@ using namespace std;
 const int NUM_EMPLOYEES = 4;
 
 // Function prototypes
-struct Payroll;
-Payroll getEmployeeInfo(int);
+struct EmployeeInfo;
+EmployeeInfo getEmployeeInfo(int);
 int getIdNumber();
 string getName();
 double getPayRate();
 int getEmpType();
 double getTimecardInfo(const string&);
+
 void payrollReport();
 
-struct Payroll {
+struct EmployeeInfo {
     int empId{};
     string empName;
     double hourlyPayRate{};
@@ -35,7 +36,7 @@ struct Payroll {
 };
 
 int main() {
-    Payroll employees[NUM_EMPLOYEES];
+    EmployeeInfo employees[NUM_EMPLOYEES];
     double hoursWorked[4];
 
     cout << "Armadillo Automotive Group payroll program." << endl;
@@ -57,8 +58,8 @@ int main() {
     return 0;
 }
 
-Payroll getEmployeeInfo(int count) {
-    Payroll employee;
+EmployeeInfo getEmployeeInfo(int count) {
+    EmployeeInfo employee;
 
     cout << "\nEnter information for employee " << count << endl;
     employee.empId = getIdNumber();
