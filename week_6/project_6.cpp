@@ -94,6 +94,7 @@ EmployeeInfo getEmployeeInfo(int count) {
 
 int getIdNumber() {
     // Input handler for getting employee's id number
+    // should be positive numbers (greater than 0)
     // TODO: Add input validation
     int employeeId;
 
@@ -105,7 +106,6 @@ int getIdNumber() {
 
 string getName() {
     // Input handler for getting an employee's name
-    // TODO: Add input validation
     string employeeName;
 
     cout << "Employee name: ";
@@ -117,11 +117,16 @@ string getName() {
 
 double getPayRate() {
     // Input handler for getting an employee's pay rate
-    // TODO: Add input validation
+    // Validates that input is a positive number
     double payRate;
 
     cout << "Pay rate: ";
-    cin >> payRate;
+    while (!(cin >> payRate) || payRate < 0) {
+        cout << "ERROR! Pay rate must be greater than 0" << endl;
+        cout << "Pay rate: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     return payRate;
 
@@ -129,7 +134,7 @@ double getPayRate() {
 
 int getEmpType() {
     // Input handler for getting an employee's type (0 for union, 1 for management)
-    // TODO: Add input validation
+    // TODO: Add input validation: Employee type should be 0 or 1.
     int employeeType = 0;
 
     cout << "Type: ";
@@ -141,7 +146,7 @@ int getEmpType() {
 
 double getTimecardInfo(const string& empName) {
     // Input handler for getting number of hours worked
-    // TODO: Add input validation
+    // TODO: Add input validation: should be non-negative
     double hours;
 
     cout << "Enter hours worked for " << empName << ": ";
