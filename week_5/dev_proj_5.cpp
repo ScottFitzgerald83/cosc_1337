@@ -21,9 +21,10 @@ void initialMenu();
 char transactionMenu();
 string getDestFromChar(char location);
 string getStatusFromBool(bool);
-void confirmTransaction(char location, bool accepted, int weight, int cost);
+void confirmTransaction(int& numAccepted, int& numRejected, int& transNumber, char location, bool accepted, int weight, int cost);
 bool isValidSelection(char shippingLocation);
-void processTransaction(char shippingLocation);
+void processTransaction(int& numAccepted, int& numRejected, int& transNumber, char shippingLocation);
+void displaySummary(int& transNumber, int numAccepted, int numRejected);
 
 class Parcel {
     // Parcel class used to instantiate objects
@@ -100,6 +101,9 @@ bool Parcel::validateWeightAndSize() {
     isValid = weight <= 50 && shortestSide > 0 && largestSide <= 6 && girth <= 10;
     if (isValid) {
         accepted = true;
+    } else {
+        isValid = false;
+        accepted = false;
     }
     return isValid;
 }
@@ -140,15 +144,26 @@ int main() {
     // of transactions until 'X' is received for shipping location
     char shippingLocation;
     bool validDest;
+    int transNumber = 1;
+    int numAccepted = 0;
+    int numRejected = 0;
 
-    initialMenu();                                   // Display the initial menu
-    shippingLocation = transactionMenu();            // Display the transaction menu
-    validDest = isValidSelection(shippingLocation);  // Validate menu selection
-    if (validDest) {
-        processTransaction(shippingLocation);
-    } else {
-        cout << "Invalid destination, skipping." << endl;
+    initialMenu();                                       // Display the initial menu
+    while (true) {
+        shippingLocation = transactionMenu();            // Display the transaction menu
+        if (shippingLocation == 'X') {                   // If 'X' is received, break loop
+            break;
+        }
+        validDest = isValidSelection(shippingLocation);  // Validate menu selection
+
+        if (validDest) {
+            processTransaction(numAccepted, numRejected, transNumber, shippingLocation);
+        } else {
+            cout << "Invalid destination, skipping." << endl;
+        }
     }
+
+    displaySummary(transNumber, numAccepted, numRejected);
 
     return 0;
 }
@@ -161,7 +176,7 @@ void initialMenu() {
 
 char transactionMenu() {
     // Prints the transaction menu with instructions
-    // returns a char representing the location
+    // returns an uppercase char representing the location
     char location;
 
     cout << "************************************************************\n";
@@ -186,7 +201,7 @@ bool isValidSelection(char shippingLocation) {
             shippingLocation == 'X');
 }
 
-void processTransaction(char shippingLocation) {
+void processTransaction(int &numAccepted, int &numRejected, int &transNumber, char shippingLocation) {
     // Takes a valid shipping location, creates an instance of the
     // Parcel class, sets its attributes, and confirms the transaction
     Parcel box;
@@ -197,9 +212,8 @@ void processTransaction(char shippingLocation) {
     box.setDimensions();                             // Set the box's dimensions
     box.setGirth();                                  // Set the box's girth
     box.validateWeightAndSize();                     // Determine if dimensions/girth are valid
-    // TODO: Point to getCost() after implementing function
-    cost = box.getSvcCharge();
-    confirmTransaction(shippingLocation, box.accepted, box.getWeight(), cost);
+    cost = box.getSvcCharge();                       // TODO: Point to getCost() after implementing function
+    confirmTransaction(numAccepted, numRejected, transNumber, shippingLocation, box.accepted, box.getWeight(), cost);
 }
 
 string getDestFromChar(char location) {
@@ -227,23 +241,33 @@ string getStatusFromBool(bool accepted) {
     return "Rejected";
 }
 
-void confirmTransaction(char location, bool accepted, int weight, int cost) {
+void confirmTransaction(int &numAccepted, int &numRejected, int &transNumber, char location, bool accepted, int weight, int cost) {
     // Takes a valid transaction and prints the details
     // of that transaction to the screen
 
     string destination;
-    int transactionNumber = 1;
     string acceptanceStatus;
 
     destination = getDestFromChar(location);
     acceptanceStatus = getStatusFromBool(accepted);
 
-    cout << "\nTransaction #" << transactionNumber << endl;
+    cout << "\nTransaction # " << transNumber << endl;
     cout << "Destination:    " << destination << endl;
     cout << "Accepted:       " << acceptanceStatus << endl;
     cout << "Weight:         " << weight << endl;
-    cout << "Shipping cost: $" << cost << endl;
+    cout << "Shipping cost: $" << cost << endl;                     // TODO: Print N/A if rejected
 
-    transactionNumber += 1;
+    if (accepted) {
+        numAccepted += 1;
+    } else {
+        numRejected += 1;
+    }
+
+    transNumber += 1;
 }
 
+void displaySummary(int &transNumber, int numAccepted, int numRejected) {
+    cout << "Number of accepted packages:" << numAccepted;
+    cout << "Number of rejected packages" << numRejected;
+    cout << "Total Cost $XXX.XX" << endl;
+}
