@@ -18,7 +18,7 @@ const int NUM_EMPLOYEES = 4;
 
 // Function prototypes
 struct Payroll;
-Payroll getEmployeeInfo();
+Payroll getEmployeeInfo(int);
 
 void payrollReport();
 
@@ -35,19 +35,24 @@ int main() {
     cout << "Armadillo Automotive Group payroll program." << endl;
 
     for (int i = 0; i < NUM_EMPLOYEES; i++) {
-        employees[i] = getEmployeeInfo();
+        employees[i] = getEmployeeInfo(i + 1);
     }
     return 0;
 }
 
-Payroll getEmployeeInfo() {
+Payroll getEmployeeInfo(int count) {
     Payroll employee;
 
-    cout << "Enter the employee number: ";
-    employee.empId = 1;
-    employee.empName = "Bjarne Stroustrup";
-    employee.hourlyPayRate = 1000000;
-    employee.empType = 0;
+    cout << "Enter information for employee " << count << endl;
+    cout << "Employee ID: ";
+    cin >> employee.empId;
+    cout << "Employee name: ";
+    cin.get();
+    getline(cin, employee.empName);
+    cout << "Pay rate: ";
+    cin >> employee.hourlyPayRate;
+    cout << "Type: ";
+    cin >> employee.empType;
 
     return employee;
 }
