@@ -24,8 +24,7 @@ int getIdNumber();
 string getName();
 double getPayRate();
 int getEmpType();
-double getTimecardInfo(string&);
-
+double getTimecardInfo(const string&);
 void payrollReport();
 
 struct Payroll {
@@ -111,7 +110,7 @@ int getEmpType() {
 
 }
 
-double getTimecardInfo(string& empName) {
+double getTimecardInfo(const string& empName) {
     double hours;
 
     cout << "Enter hours worked for " << empName << ": ";
