@@ -52,8 +52,7 @@ Payroll getEmployeeInfo(int count) {
     employee.empId = getIdNumber();
     employee.empName = getName();
     employee.hourlyPayRate = getPayRate();
-    cout << "Type: ";
-    cin >> employee.empType;
+    employee.empType = getEmpType();
 
     return employee;
 }
@@ -91,6 +90,9 @@ double getPayRate() {
 int getEmpType() {
     // TODO: Implement function
     int employeeType = 0;
+
+    cout << "Type: ";
+    cin >> employeeType;
 
     return employeeType;
 
