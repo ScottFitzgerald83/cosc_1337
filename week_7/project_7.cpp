@@ -7,24 +7,22 @@ using namespace std;
 
 // Globals
 const int MAX_NAME_LENGTH = 30;
+const int GRADE_LOWER_BOUND = 0;
+const int GRADE_UPPER_BOUND = 110;
+const int NUM_TESTS = 3;
 
 // Prototypes
 struct Grades;
-Grades getStudentData();
+void getStudentData(Grades *studentGrades, int numStudents);
+int getValidGrade(int testNumber);
+void sortGradesAscending(int testScores[], int size);
+double calcAverage(const int testScores[]);
 
 struct Grades {
     char studentName[MAX_NAME_LENGTH + 1];
-    int test1;
-    int test2;
-    int test3;
+    int testScores[3];
+    double average;
 };
-/*
- * Your program should work for any number of students.
- * When the program starts, it should ask the user for the
- * number of students to be processed. Then it should
- * dynamically allocate an array of that size
- * (array of student/score structures) using the new operator.
- */
 
 int main() {
     int num_students;
@@ -33,31 +31,73 @@ int main() {
     cout << "Enter the number of students: ";
     cin >> num_students;
 
-    Grades *studentGrades = new Grades;
+    Grades *studentGrades = new Grades[num_students];
+    getStudentData(studentGrades, num_students);
 
     for (int i = 0; i < num_students; i++) {
-        studentGrades[i] = getStudentData();
-        cout << "\nName: " << studentGrades[i].studentName;
-        cout << "\ntest1: " << studentGrades[i].test1;
-        cout << "\ntest2: " << studentGrades[i].test2;
-        cout << "\ntest3: " << studentGrades[i].test3;
+        studentGrades[i].average = calcAverage(studentGrades[i].testScores);
+        sortGradesAscending(studentGrades[i].testScores, NUM_TESTS);
+        cout << "\nname: " << studentGrades[i].studentName;
+        cout << "\ntest1: " << studentGrades[i].testScores[0];
+        cout << "\ntest2: " << studentGrades[i].testScores[1];
+        cout << "\ntest3: " << studentGrades[i].testScores[2];
+        cout << "\naverage: " << studentGrades[i].average;
     }
-
 }
 
-Grades getStudentData() {
-    Grades studentGrades;
+void getStudentData(Grades *studentGrades, int numStudents) {
+    // Get students' grades from user input. Takes a pointer to a
+    // struct array, loops over input operation `numStudents` times
 
-    cout << "\nEnter the student's name: ";
-    cin.get();
-    cin.getline(studentGrades.studentName, MAX_NAME_LENGTH);
-    cout << "Enter the grade for test 1: ";
-    cin >> studentGrades.test1;
-    cout << "Enter the grade for test 2: ";
-    cin >> studentGrades.test2;
-    cout << "Enter the grade for test 3: ";
-    cin >> studentGrades.test3;
+    for (int i = 0; i < numStudents; i++) {
+        cout << "\nEnter the student's name: ";
+        cin.get();
+        cin.getline(studentGrades[i].studentName, MAX_NAME_LENGTH);
+        for (int j = 0; j < NUM_TESTS; j++) {
+            studentGrades[i].testScores[j] = getValidGrade(j + 1);
+        }
+    }
+}
 
-    return studentGrades;
+int getValidGrade(int testNumber) {
+    // Get and return a valid grade between `GRADE_LOWER_BOUND`
+    // and `GRADE_UPPER_BOUND` inclusive
+    int validGrade = -1;
 
+    cout << "Enter the grade for test #" << testNumber << ": ";
+    while (!(cin >> validGrade) || (validGrade < GRADE_LOWER_BOUND || validGrade > GRADE_UPPER_BOUND)) {
+        cout << "ERROR! Grade must be between " << GRADE_LOWER_BOUND
+             << " and " << GRADE_UPPER_BOUND << " inclusive." << endl;
+        cout << "Enter the grade for test #" << testNumber << ": ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    return validGrade;
+}
+
+void sortGradesAscending(int testScores[], int size) {
+    // Sorts array of grades in ascending order
+    int temp;
+    bool swap;
+
+    do {
+        swap = false;
+        for (int count = 0; count < (size - 1); count++) {
+            if (testScores[count] > testScores[count + 1]) {
+                temp = testScores[count];
+                testScores[count] = testScores[count + 1];
+                testScores[count + 1] = temp;
+                swap = true;
+            }
+        }
+    } while (swap); // Loop again if swap happened
+}
+
+double calcAverage(const int testScores[]) {
+    // Take array of testScores and return average
+    double average = 0.0;
+
+    average = (testScores[0] + testScores[1] + testScores[2]) * 1.0 / NUM_TESTS;
+
+    return average;
 }
