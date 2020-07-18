@@ -3,6 +3,7 @@
 // Status: In Progress
 // Date: 2020-07-05
 #include <iostream>
+
 using namespace std;
 
 // Globals
@@ -13,14 +14,18 @@ const int NUM_TESTS = 3;
 
 // Prototypes
 struct Grades;
+
 void getStudentData(Grades *studentGrades, int numStudents);
+
 int getValidGrade(int testNumber);
-void sortGradesAscending(int testScores[], int size);
+
+void sortGradesAscending(int *ptestScores, int size);
+
 double calcAverage(const int testScores[]);
 
 struct Grades {
     char studentName[MAX_NAME_LENGTH + 1];
-    int testScores[3];
+    int testScores[3], *ptrTestScores = testScores;
     double average;
 };
 
@@ -36,7 +41,7 @@ int main() {
 
     for (int i = 0; i < num_students; i++) {
         studentGrades[i].average = calcAverage(studentGrades[i].testScores);
-        sortGradesAscending(studentGrades[i].testScores, NUM_TESTS);
+        sortGradesAscending(studentGrades[i].ptrTestScores, NUM_TESTS);
         cout << "\nname: " << studentGrades[i].studentName;
         cout << "\ntest1: " << studentGrades[i].testScores[0];
         cout << "\ntest2: " << studentGrades[i].testScores[1];
@@ -75,22 +80,18 @@ int getValidGrade(int testNumber) {
     return validGrade;
 }
 
-void sortGradesAscending(int testScores[], int size) {
-    // Sorts array of grades in ascending order
-    int temp;
-    bool swap;
+void sortGradesAscending(int *ptestScores, int size) {
+    int i, j, t;
 
-    do {
-        swap = false;
-        for (int count = 0; count < (size - 1); count++) {
-            if (testScores[count] > testScores[count + 1]) {
-                temp = testScores[count];
-                testScores[count] = testScores[count + 1];
-                testScores[count + 1] = temp;
-                swap = true;
+    for (i = 0; i < size; i++) {
+        for (j = i + 1; j < size; j++) {
+            if (*(ptestScores + j) < *(ptestScores + i)) {
+                t = *(ptestScores + i);
+                *(ptestScores + i) = *(ptestScores + j);
+                *(ptestScores + j) = t;
             }
         }
-    } while (swap); // Loop again if swap happened
+    }
 }
 
 double calcAverage(const int testScores[]) {
