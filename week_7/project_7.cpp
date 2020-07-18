@@ -5,6 +5,7 @@
 // This program gets names and grades of students from user input. From there, it calculates
 // The average grade per student and displays the results.
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -15,7 +16,6 @@ const int GRADE_UPPER_BOUND = 110;                              // Highest grade
 const int A_THRESHOLD = 90;                                     // Letter grade thresholds
 const int B_THRESHOLD = 80;                                     // Letter grade thresholds
 const int C_THRESHOLD = 70;                                     // Letter grade thresholds
-const int D_THRESHOLD = 60;                                     // Letter grade thresholds
 const int NUM_TESTS = 3;                                        // Number of tests
 
 // Prototypes
@@ -27,6 +27,7 @@ void sortGradesAscending(int *ptestScores, int size);           // Sort the grad
 double calcAverage(const int testScores[]);                     // Calculate each student's average
 char calcLetterGrade(double average);                           // Calculate each student's letter grade
 double calcClassAverage(Grades *studentGrades, int numStudents);// Calculate avg grade for the class
+void displayResults(Grades *studentGrades, int numStudents, double average);    // Display resuts
 
 struct Grades {
     char studentName[MAX_NAME_LENGTH + 1];                      // Name of the student
@@ -52,16 +53,10 @@ int main() {
         studentGrades[i].average = calcAverage(studentGrades[i].testScores);
         sortGradesAscending(studentGrades[i].ptrTestScores, NUM_TESTS);
         studentGrades[i].letterGrade = calcLetterGrade(studentGrades[i].average);
-        cout << "\nname: " << studentGrades[i].studentName;
-        cout << "\ntest1: " << studentGrades[i].testScores[0];
-        cout << "\ntest2: " << studentGrades[i].testScores[1];
-        cout << "\ntest3: " << studentGrades[i].testScores[2];
-        cout << "\naverage: " << studentGrades[i].average;
-        cout << "\nletter grade: " << studentGrades[i].letterGrade << endl;
     }
 
     classAverage = calcClassAverage(studentGrades, num_students);
-    cout << "\nClass average: " << classAverage << endl;
+    displayResults(studentGrades, num_students, classAverage);
 }
 
 void showIntro() {
@@ -91,7 +86,7 @@ int getValidGrade(int testNumber) {
 
     cout << "Enter the grade for test #" << testNumber << ": ";
     while (!(cin >> validGrade) || (validGrade < GRADE_LOWER_BOUND || validGrade > GRADE_UPPER_BOUND)) {
-        cout << "ERROR! Grade must be between " << GRADE_LOWER_BOUND
+        cout << "ERROR! Grade must be an integer between " << GRADE_LOWER_BOUND
              << " and " << GRADE_UPPER_BOUND << " inclusive." << endl;
         cout << "Enter the grade for test #" << testNumber << ": ";
         cin.clear();
@@ -124,11 +119,11 @@ char calcLetterGrade(double average) {
     // Takes a grade average and returns the corresponding letter grade
     char letterGrade;
 
-    if (average <= 70) {
+    if (average <= C_THRESHOLD) {
         letterGrade = 'F';
-    } else if (average <= 80) {
+    } else if (average <= B_THRESHOLD) {
         letterGrade = 'C';
-    } else if (average <= 90) {
+    } else if (average <= A_THRESHOLD) {
         letterGrade = 'B';
     } else {
         letterGrade = 'A';
@@ -148,4 +143,23 @@ double calcClassAverage(Grades *studentGrades, int numStudents) {
         }
     }
     return totalPoints / numberOfTests;
+}
+
+void displayResults(Grades *studentGrades, int numStudents, double average) {
+    // Display the results
+    cout << fixed << setprecision(2);
+
+    cout << left << setw(30) << "Name"
+         << left << setw(20) << "Scores"
+         << right << setw(15) << "Letter Grade" << endl;
+    for (int i = 0; i < numStudents; i++) {
+        cout << left << setw(30) << studentGrades[i].studentName;
+        cout << left << setw(3) << studentGrades[i].testScores[0];
+        cout << left << setw(3) << studentGrades[i].testScores[1];
+        cout << left << setw(3) << studentGrades[i].testScores[2];
+        cout << right << setw(15) << studentGrades[i].letterGrade << endl;
+    }
+    cout << "___________________________________" << endl;
+    cout << left << setw(30) << "Average: " << average
+         << left << setw(20);
 }
