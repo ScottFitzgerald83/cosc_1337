@@ -4,6 +4,7 @@ cmake-build-debug/
 *.zip
 submissions/
 exams/
+*Exam*
 .idea/
 *.out
 Course_Materials/
