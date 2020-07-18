@@ -26,6 +26,7 @@ int getValidGrade(int testNumber);                              // Get and valid
 void sortGradesAscending(int *ptestScores, int size);           // Sort the grades in ascending order
 double calcAverage(const int testScores[]);                     // Calculate each student's average
 char calcLetterGrade(double average);                           // Calculate each student's letter grade
+double calcClassAverage(Grades *studentGrades, int numStudents);// Calculate avg grade for the class
 
 struct Grades {
     char studentName[MAX_NAME_LENGTH + 1];                      // Name of the student
@@ -39,6 +40,7 @@ int main() {
     // Calls the other functions to get student names and grades,
     // Sort grades, calculate and display averages
     int num_students;
+    double classAverage;
 
     showIntro();
     cin >> num_students;
@@ -55,8 +57,11 @@ int main() {
         cout << "\ntest2: " << studentGrades[i].testScores[1];
         cout << "\ntest3: " << studentGrades[i].testScores[2];
         cout << "\naverage: " << studentGrades[i].average;
-        cout << "\nletter grade: " << studentGrades[i].letterGrade;
+        cout << "\nletter grade: " << studentGrades[i].letterGrade << endl;
     }
+
+    classAverage = calcClassAverage(studentGrades, num_students);
+    cout << "\nClass average: " << classAverage << endl;
 }
 
 void showIntro() {
@@ -130,4 +135,17 @@ char calcLetterGrade(double average) {
     }
 
     return letterGrade;
+}
+
+double calcClassAverage(Grades *studentGrades, int numStudents) {
+    // Takes a struct array and calculates the average of all students' test scores
+    double totalPoints = 0;
+    int numberOfTests = numStudents * NUM_TESTS;
+
+    for (int i = 0; i < numStudents; i++) {
+        for (int j = 0; j < NUM_TESTS; j++) {
+            totalPoints += studentGrades[i].testScores[j];
+        }
+    }
+    return totalPoints / numberOfTests;
 }
