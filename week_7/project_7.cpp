@@ -1,35 +1,36 @@
 // Scott Fitzgerald
 // Project #7
 // Status: In Progress
-// Date: 2020-07-05
+// Date: 2020-07-18
+// This program gets names and grades of students from user input. From there, it calculates
+// The average grade per student and displays the results.
 #include <iostream>
 
 using namespace std;
 
 // Globals
-const int MAX_NAME_LENGTH = 30;
-const int GRADE_LOWER_BOUND = 0;
-const int GRADE_UPPER_BOUND = 110;
-const int NUM_TESTS = 3;
+const int MAX_NAME_LENGTH = 30;                                 // Longest name allowed
+const int GRADE_LOWER_BOUND = 0;                                // Lowest grade allowed
+const int GRADE_UPPER_BOUND = 110;                              // Highest grade allowed
+const int NUM_TESTS = 3;                                        // Number of tests
 
 // Prototypes
-struct Grades;
-
-void getStudentData(Grades *studentGrades, int numStudents);
-
-int getValidGrade(int testNumber);
-
-void sortGradesAscending(int *ptestScores, int size);
-
-double calcAverage(const int testScores[]);
+struct Grades;                                                  // Struct to hold student name/grade pairs
+void getStudentData(Grades *studentGrades, int numStudents);    // Gets user input on num students and grades
+int getValidGrade(int testNumber);                              // Get and validate each grade
+void sortGradesAscending(int *ptestScores, int size);           // Sort the grades in ascending order
+double calcAverage(const int testScores[]);                     // Calculate each student's average
 
 struct Grades {
-    char studentName[MAX_NAME_LENGTH + 1];
-    int testScores[3], *ptrTestScores = testScores;
-    double average;
+    char studentName[MAX_NAME_LENGTH + 1];                      // Name of the student
+    int testScores[3], *ptrTestScores = testScores;             // Array to hold grades, along with pointer
+    double average;                                             // Average of all grades
 };
 
 int main() {
+    // Main function, prints program description and instructions
+    // Calls the other functions to get student names and grades,
+    // Sort grades, calculate and display averages
     int num_students;
 
     cout << "Test score program" << endl;
@@ -65,8 +66,7 @@ void getStudentData(Grades *studentGrades, int numStudents) {
 }
 
 int getValidGrade(int testNumber) {
-    // Get and return a valid grade between `GRADE_LOWER_BOUND`
-    // and `GRADE_UPPER_BOUND` inclusive
+    // Get and return a valid grade between `GRADE_LOWER_BOUND` and `GRADE_UPPER_BOUND` inclusive
     int validGrade = -1;
 
     cout << "Enter the grade for test #" << testNumber << ": ";
@@ -81,24 +81,22 @@ int getValidGrade(int testNumber) {
 }
 
 void sortGradesAscending(int *ptestScores, int size) {
-    int i, j, t;
+    // Takes a pointer to an array and sorts the array in ascending order
+    // Used to sort student grades
+    int i, j, temp;
 
     for (i = 0; i < size; i++) {
         for (j = i + 1; j < size; j++) {
             if (*(ptestScores + j) < *(ptestScores + i)) {
-                t = *(ptestScores + i);
+                temp = *(ptestScores + i);
                 *(ptestScores + i) = *(ptestScores + j);
-                *(ptestScores + j) = t;
+                *(ptestScores + j) = temp;
             }
         }
     }
 }
 
 double calcAverage(const int testScores[]) {
-    // Take array of testScores and return average
-    double average = 0.0;
-
-    average = (testScores[0] + testScores[1] + testScores[2]) * 1.0 / NUM_TESTS;
-
-    return average;
+    // Take array of testScores and return the average score
+    return (testScores[0] + testScores[1] + testScores[2]) * 1.0 / NUM_TESTS;
 }
