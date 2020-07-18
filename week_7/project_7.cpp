@@ -10,30 +10,30 @@
 using namespace std;
 
 // Globals
-const int MAX_NAME_LENGTH = 30;                                 // Longest name allowed
-const int GRADE_LOWER_BOUND = 0;                                // Lowest grade allowed
-const int GRADE_UPPER_BOUND = 110;                              // Highest grade allowed
-const int A_THRESHOLD = 90;                                     // Letter grade thresholds
-const int B_THRESHOLD = 80;                                     // Letter grade thresholds
-const int C_THRESHOLD = 70;                                     // Letter grade thresholds
-const int NUM_TESTS = 3;                                        // Number of tests
+const int MAX_NAME_LENGTH = 30;                         // Longest name allowed
+const int GRADE_LOWER_BOUND = 0;                        // Lowest grade allowed
+const int GRADE_UPPER_BOUND = 110;                      // Highest grade allowed
+const int A_THRESHOLD = 90;                             // Letter grade thresholds
+const int B_THRESHOLD = 80;                             // Letter grade thresholds
+const int C_THRESHOLD = 70;                             // Letter grade thresholds
+const int NUM_TESTS = 3;                                // Number of tests
 
 // Prototypes
-struct Grades;                                                  // Struct to hold student name/grade pairs
-void showIntro();                                               // Message to introduce the progam
-void getStudentData(Grades *studentGrades, int numStudents);    // Gets user input on num students and grades
-int getValidGrade(int testNumber);                              // Get and validate each grade
-void sortGradesAscending(int *ptestScores, int size);           // Sort the grades in ascending order
-double calcAverage(const int testScores[]);                     // Calculate each student's average
-char calcLetterGrade(double average);                           // Calculate each student's letter grade
-double calcClassAverage(Grades *studentGrades, int numStudents);// Calculate avg grade for the class
-void displayResults(Grades *studentGrades, int numStudents, double average);    // Display resuts
+struct Grades;                                          // Struct to hold student name/grade pairs
+void showIntro();                                       // Message to introduce the progam
+void getStudentData(Grades*, int);                      // Gets user input on num students and grades
+int getValidGrade(int);                                 // Get and validate each grade
+void sortGradesAscending(int*, int);                    // Sort the grades in ascending order
+double calcAverage(const int[]);                        // Calculate each student's average
+char calcLetterGrade(double);                           // Calculate each student's letter grade
+double calcClassAverage(Grades*, int);                  // Calculate avg grade for the class
+void displayResults(Grades*, int, double);              // Display results
 
 struct Grades {
-    char studentName[MAX_NAME_LENGTH + 1];                      // Name of the student
-    int testScores[3], *ptrTestScores = testScores;             // Array to hold grades, along with pointer
-    double average;                                             // Average of all grades
-    char letterGrade;                                           // Student's letter grade
+    char studentName[MAX_NAME_LENGTH + 1];              // Name of the student
+    int testScores[3], *ptrTestScores = testScores;     // Array to hold grades, along with pointer
+    double average;                                     // Average of all grades
+    char letterGrade;                                   // Student's letter grade
 };
 
 int main() {
