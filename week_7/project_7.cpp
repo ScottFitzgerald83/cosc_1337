@@ -1,6 +1,6 @@
 // Scott Fitzgerald
 // Project #7
-// Status: In Progress
+// Status: Completed
 // Date: 2020-07-18
 // This program gets names and grades of students from user input. From there, it calculates
 // The average grade per student and displays the results.
