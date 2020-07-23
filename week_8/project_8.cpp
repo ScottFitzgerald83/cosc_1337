@@ -3,8 +3,12 @@
 // Status: In Progress
 // Date: 2020-07-22
 #include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
+
+string getMonthName(int);
 
 class Date {
 private:
@@ -13,13 +17,9 @@ private:
     int year;
 public:
     Date();
-
     void setDate(int, int, int);
-
     void printMDYnumeric();
-
     void printMDYalpha();
-
     void printDMYalpha();
 };
 
@@ -49,14 +49,12 @@ void Date::printMDYnumeric() {
 
 void Date::printMDYalpha() {
     // March 15, 2010
-    // TODO: Get string month names
-    cout << month << " " << day << ", " << year << endl;
+    cout << getMonthName(month) << " " << day << ", " << year << endl;
 }
 
 void Date::printDMYalpha() {
-    // TODO: Get string month names
     // 15 March 2010
-    cout << day << " " << month << " " << year << endl;
+    cout << day << " " << getMonthName(month) << " " << year << endl;
 }
 
 int main() {
@@ -66,7 +64,7 @@ int main() {
 
     // set the dates in the objects and set it to 3/4/2020
     date1.setDate(3, 14, 2020);
-    date2.setDate(7, 20, 1999);
+    date2.setDate(7, 20, 1899);
 
     // display each date in each format
     cout << "Date 1:" << endl;
@@ -80,4 +78,11 @@ int main() {
     date2.printMDYalpha();
 
     return 0;
+}
+
+string getMonthName(int monthNumber) {
+    vector<string> months = {"January", "February", "March", "April",
+                             "May", "June", "July", "August", "September",
+                             "October", "November", "December"};
+    return months[ monthNumber - 1 ];
 }
