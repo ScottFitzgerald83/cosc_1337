@@ -24,6 +24,7 @@ public:
     void printMDYnumeric();         // Print date in MM/DD/YYYY format
     void printMDYalpha();           // Print date in Month DD, YYYY format
     void printDMYalpha();           // Print date in DD Month YYYY format
+    void printEachFormat();         // Prints each of the above formats
 };
 
 Date::Date() {
@@ -65,68 +66,61 @@ void Date::printDMYalpha() {
     cout << day << " " << getMonthName(month) << " " << year << endl;
 }
 
+void Date::printEachFormat() {
+    // Prints the date in each of the formats defined in the print date functions
+    cout << endl;
+    printMDYnumeric();
+    printMDYalpha();
+    printDMYalpha();
+}
+
 int main() {
     // Defines several valid and invalid date object
     // Sets the dates for those objects then displays each date
     // in the various formats defined above
 
-    // Declare date object
-    Date validDate1, validDate2, validDate3, validDate4, validDate5;
-    Date invalidDate1, invalidDate2, invalidDate3, invalidDate4, invalidDate5, invalidDate6;
+    // Declare valid and invalid date objects for testing
+    Date validDateObj;
+    Date invalidDateObj;
 
-    // valid date objects
-    validDate1.setDate(2, 9, 1983);
-    validDate2.setDate(3, 10, 2016);
-    validDate3.setDate(4, 30, 1970);
-    validDate4.setDate(7, 31, 2010);
-    validDate5.setDate(12, 25, 1999);
-
-    // invalid date objects
-    invalidDate1.setDate(0, 9, 1983);
-    invalidDate2.setDate(13, 31, 2016);
-    invalidDate3.setDate(4, 0, 1940);
-    invalidDate4.setDate(7, 32, 2010);
-    invalidDate5.setDate(12, 25, 1949);
-    invalidDate6.setDate(12, 25, 2021);
-
-    // display each date in each format
-    cout << "\n**********************" << endl;
+    // display valid dates in each format
+    cout << "**********************" << endl;
     cout << "    Valid dates" << endl;
     cout << "**********************" << endl;
+    validDateObj.setDate(2, 9, 1983);
+    validDateObj.printEachFormat();
+    validDateObj.setDate(3, 10, 2016);
+    validDateObj.printEachFormat();
+    validDateObj.setDate(4, 30, 1970);
+    validDateObj.printEachFormat();
+    validDateObj.setDate(7, 31, 2010);
+    validDateObj.printEachFormat();
+    validDateObj.setDate(12, 25, 1999);
+    validDateObj.printEachFormat();
 
-    cout << "\nDate 1: " << endl;
-    validDate1.printMDYnumeric(); validDate1.printMDYalpha(); validDate1.printDMYalpha();
-    cout << "\nDate 2: " << endl;
-    validDate2.printMDYnumeric(); validDate2.printMDYalpha(); validDate2.printDMYalpha();
-    cout << "\nDate 3: " << endl;
-    validDate3.printMDYnumeric(); validDate3.printMDYalpha(); validDate3.printDMYalpha();
-    cout << "\nDate 4: " << endl;
-    validDate4.printMDYnumeric(); validDate4.printMDYalpha(); validDate4.printDMYalpha();
-    cout << "\nDate 5: " << endl;
-    validDate5.printMDYnumeric(); validDate5.printMDYalpha(); validDate5.printDMYalpha();
-
-    cout << "\n**********************" << endl;
-    cout << "     Invalid dates" << endl;
+    // display invalid dates in each format
     cout << "**********************" << endl;
-
-    cout << "\nDate 1: " << endl;
-    invalidDate1.printMDYnumeric(); invalidDate1.printMDYalpha(); invalidDate1.printDMYalpha();
-    cout << "\nDate 2: " << endl;
-    invalidDate2.printMDYnumeric(); invalidDate2.printMDYalpha(); invalidDate2.printDMYalpha();
-    cout << "\nDate 3: " << endl;
-    invalidDate3.printMDYnumeric(); invalidDate3.printMDYalpha(); invalidDate3.printDMYalpha();
-    cout << "\nDate 4: " << endl;
-    invalidDate4.printMDYnumeric(); invalidDate4.printMDYalpha(); invalidDate4.printDMYalpha();
-    cout << "\nDate 5: " << endl;
-    invalidDate5.printMDYnumeric(); invalidDate5.printMDYalpha(); invalidDate5.printDMYalpha();
-    cout << "\nDate 6: " << endl;
-    invalidDate6.printMDYnumeric(); invalidDate6.printMDYalpha(); invalidDate6.printDMYalpha();
+    cout << "    Invalid dates" << endl;
+    cout << "**********************" << endl;
+    invalidDateObj.setDate(0, 9, 1983);
+    invalidDateObj.printEachFormat();
+    invalidDateObj.setDate(13, 31, 2016);
+    invalidDateObj.printEachFormat();
+    invalidDateObj.setDate(4, 0, 1940);
+    invalidDateObj.printEachFormat();
+    invalidDateObj.setDate(7, 32, 2010);
+    invalidDateObj.printEachFormat();
+    invalidDateObj.setDate(12, 25, 1949);
+    invalidDateObj.printEachFormat();
+    invalidDateObj.setDate(12, 25, 2021);
 
     return 0;
 }
 
 string getMonthName(int monthNumber) {
+    // Takes an int value and returns the corresponding month
     vector<string> months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
                              "October", "November", "December"};
     return months[monthNumber - 1];
 }
+
